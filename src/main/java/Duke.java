@@ -12,6 +12,7 @@ public class Duke{
             + "Hello! What can I do for you?";
         Scanner scanner = new Scanner(System.in);
         Boolean stay = true;
+        List<String> stuff = new ArrayList<String>();
         //SHOW
         System.out.println(str);
         //UH OH
@@ -21,8 +22,12 @@ public class Duke{
                 case "bye":
                     stay = false;
                     break;
+                case "list":
+                    System.out.println(stuff);
+                    break;
                 default:
-                    System.out.println(str);
+                    stuff.add(str);
+                    System.out.println("added: " + str);
             }
         }
         System.out.println("Bye. Hope to see you again soon!");
