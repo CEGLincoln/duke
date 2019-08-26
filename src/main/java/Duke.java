@@ -45,7 +45,7 @@ public class Duke{
                         printStr(part[1]);
                     }
                     catch(Exception e){
-                        printStr("[@ whispers to you: Hello World!]");
+                        printStr("OOPS!!! Something went wrong.");
                     }
                     break;
                 case "bye":
@@ -67,7 +67,7 @@ public class Duke{
                         printStr(stuff.get(x).toString());
                     }
                     catch(Exception e){
-                        printStr("OOPS!!! The id of a done must be an int.");
+                        printStr("OOPS!!! Something went wrong.");
                     }
                     break;
                 case "todo":
@@ -78,7 +78,7 @@ public class Duke{
                         printStr("Now you have " + stuff.size() + " tasks in the list.");
                     }
                     catch(Exception e){
-                        printStr("OOPS!!! The description of a todo cannot be empty.");
+                        printStr("OOPS!!! Something went wrong.");
                     }
                     break;
                 case "deadline":
@@ -91,7 +91,7 @@ public class Duke{
                         printStr("Now you have " + stuff.size() + " tasks in the list.");
                     }
                     catch(Exception e){
-                        printStr("OOPS!!! The description of a todo cannot be empty.");
+                        printStr("OOPS!!! Something went wrong.");
                     }
                     break;
                 case "event":
@@ -104,7 +104,7 @@ public class Duke{
                         printStr("Now you have " + stuff.size() + " tasks in the list.");
                     }
                     catch(Exception e){
-                        printStr("OOPS!!! The description of a todo cannot be empty.");
+                        printStr("OOPS!!! Something went wrong.");
                     }
                     break;
                 default:
