@@ -1,10 +1,9 @@
 public class Todo extends Task {
 
-    //protected String time;
+    private static final long serialVersionUID = 1L;
 
-    public Todo(String description/*, String t*/) {
+    public Todo(String description) {
         super(description);
-        //this.time = t;
     }
 
     @Override

@@ -1,14 +1,13 @@
-import java.time.*;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Event extends Task {
 
-    //protected String time;
+    private static final long serialVersionUID = 1L;
     protected LocalDateTime ldt;
 
     public Event(String description, String t) throws DukeException{
         super(description);
-        //this.time = t;
         try{
             ldt = LocalDateTime.parse(t);
         }

@@ -1,7 +1,11 @@
-import java.io.*;
-import java.util.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Scanner;
 
-public class Duke{
+public class Duke {
 
     private static String str = "This is the\n"
         + " ____        _        \n"
@@ -15,6 +19,10 @@ public class Duke{
     private static ArrayList<Task> stuff = new ArrayList<Task>();
     private static Integer x = 0;
 
+    public static void printStr(String str) {
+        System.out.println(str);
+    }
+
     public static void write(){
         try{
             FileOutputStream fos = new FileOutputStream("duke.txt");
@@ -23,7 +31,7 @@ public class Duke{
             oos.close();
         }
         catch(Exception e){
-            System.out.println("Oops! Write to file error.");
+            printStr("Oops! Write to file error.");
         }
     }
 
@@ -31,17 +39,13 @@ public class Duke{
         try{
             FileInputStream fis = new FileInputStream("duke.txt");
             ObjectInputStream ois = new ObjectInputStream(fis);
-            stuff = (ArrayList<Task>) ois.readObject();
+            stuff = (ArrayList<Task>) ois.readObject(); // WARNING: unchecked cast
             ois.close();
         }
         catch(Exception e){
-            //System.out.println("Oops! Read from file error.");
+            //Technically don't even need this
             write();
         }
-    }
-
-    public static void printStr(String str) {
-        System.out.println(str);
     }
 
     public static void main(String[] args) {
