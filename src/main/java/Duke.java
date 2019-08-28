@@ -17,7 +17,7 @@ public class Duke{
 
     public static void write(){
         try{
-            FileOutputStream fos = new FileOutputStream("t.tmp");
+            FileOutputStream fos = new FileOutputStream("duke.txt");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(stuff);
             oos.close();
@@ -29,13 +29,14 @@ public class Duke{
 
     public static void read(){
         try{
-            FileInputStream fis = new FileInputStream("t.tmp");
+            FileInputStream fis = new FileInputStream("duke.txt");
             ObjectInputStream ois = new ObjectInputStream(fis);
             stuff = (ArrayList<Task>) ois.readObject();
             ois.close();
         }
         catch(Exception e){
-            System.out.println("Oops! Read from file error.");
+            //System.out.println("Oops! Read from file error.");
+            write();
         }
     }
 
@@ -115,6 +116,9 @@ public class Duke{
                         printStr(d.toString());
                         printStr("Now you have " + stuff.size() + " tasks in the list.");
                     }
+                    catch(DukeException d){
+                        printStr("PLZ");
+                    }
                     catch(Exception e){
                         printStr("OOPS!!! The description of a deadline cannot be empty.");
                     }
@@ -128,6 +132,9 @@ public class Duke{
                         printStr("Got it. I've added this task:");
                         printStr(e.toString());
                         printStr("Now you have " + stuff.size() + " tasks in the list.");
+                    }
+                    catch(DukeException d){
+                        printStr("PLZ");
                     }
                     catch(Exception e){
                         printStr("OOPS!!! The description of an event cannot be empty.");
