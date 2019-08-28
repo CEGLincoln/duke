@@ -1,33 +1,56 @@
+import java.io.*;
 import java.util.*;
 
 public class Duke{
+
+    private static String str = "This is the\n"
+        + " ____        _        \n"
+        + "|  _ \\ _   _| | _____ \n"
+        + "| | | | | | | |/ / _ \\\n"
+        + "| |_| | |_| |   <  __/\n"
+        + "|____/ \\__,_|_|\\_\\___|\n\n"
+        + "Hello! What can I do for you?";
+    private static Scanner scanner = new Scanner(System.in);
+    private static Boolean stay = true;
+    private static ArrayList<Task> stuff = new ArrayList<Task>();
+    private static Integer x = 0;
+
+    public static void write(){
+        try{
+            FileOutputStream fos = new FileOutputStream("t.tmp");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(stuff);
+            oos.close();
+        }
+        catch(Exception e){
+            System.out.println("Oops! Write to file error.");
+        }
+    }
+
+    public static void read(){
+        try{
+            FileInputStream fis = new FileInputStream("t.tmp");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            stuff = (ArrayList<Task>) ois.readObject();
+            ois.close();
+        }
+        catch(Exception e){
+            System.out.println("Oops! Read from file error.");
+        }
+    }
+
     public static void printStr(String str) {
         System.out.println(str);
     }
 
     public static void main(String[] args) {
-        //DECLARE
-        String str = "This is the\n"
-            + " ____        _        \n"
-            + "|  _ \\ _   _| | _____ \n"
-            + "| | | | | | | |/ / _ \\\n"
-            + "| |_| | |_| |   <  __/\n"
-            + "|____/ \\__,_|_|\\_\\___|\n\n"
-            + "Hello! What can I do for you?";
-        Scanner scanner = new Scanner(System.in);
-        Boolean stay = true;
-        ArrayList<Task> stuff = new ArrayList<Task>();
-        Integer x = 0;
-
-        //START HERE
+        read();
         printStr(str);
         while(stay){
-            //INPUT
             printStr("______________________________");
             str = scanner.nextLine();
             printStr("______________________________");
             String[] part = str.split(" ", 2);
-            //OUTPUT
             switch(part[0]){
                 case "help":
                     printStr("Here is the command list:");
@@ -45,7 +68,7 @@ public class Duke{
                         printStr(part[1]);
                     }
                     catch(Exception e){
-                        printStr("OOPS!!! Something went wrong.");
+                        printStr("OOPS!!! The description of an echo cannot be empty.");
                     }
                     break;
                 case "bye":
@@ -67,51 +90,55 @@ public class Duke{
                         printStr(stuff.get(x).toString());
                     }
                     catch(Exception e){
-                        printStr("OOPS!!! Something went wrong.");
+                        printStr("OOPS!!! The id of a done must be between 1 and " + (stuff.size()-1) + ".");
                     }
                     break;
                 case "todo":
                     try{
-                        stuff.add(new Todo(part[1]));
+                        Todo t = new Todo(part[1]);
+                        stuff.add(t);
                         printStr("Got it. I've added this task:");
-                        printStr(stuff.get(stuff.size()-1).toString());
+                        printStr(t.toString());
                         printStr("Now you have " + stuff.size() + " tasks in the list.");
                     }
                     catch(Exception e){
-                        printStr("OOPS!!! Something went wrong.");
+                        printStr("OOPS!!! The description of a todo cannot be empty.");
                     }
                     break;
                 case "deadline":
                     try{
                         String[] art = part[1].split("/", 2);
                         String[] rt = art[1].split(" ", 2);
-                        stuff.add(new Deadline(art[0], rt[1]));
+                        Deadline d = new Deadline(art[0], rt[1]);
+                        stuff.add(d);
                         printStr("Got it. I've added this task:");
-                        printStr(stuff.get(stuff.size()-1).toString());
+                        printStr(d.toString());
                         printStr("Now you have " + stuff.size() + " tasks in the list.");
                     }
                     catch(Exception e){
-                        printStr("OOPS!!! Something went wrong.");
+                        printStr("OOPS!!! The description of a deadline cannot be empty.");
                     }
                     break;
                 case "event":
                     try{
                         String[] art = part[1].split("/", 2);
                         String[] rt = art[1].split(" ", 2);
-                        stuff.add(new Event(art[0], rt[1]));
+                        Event e = new Event(art[0], rt[1]);
+                        stuff.add(e);
                         printStr("Got it. I've added this task:");
-                        printStr(stuff.get(stuff.size()-1).toString());
+                        printStr(e.toString());
                         printStr("Now you have " + stuff.size() + " tasks in the list.");
                     }
                     catch(Exception e){
-                        printStr("OOPS!!! Something went wrong.");
+                        printStr("OOPS!!! The description of an event cannot be empty.");
                     }
                     break;
                 default:
                     printStr("OOPS!!! I'm sorry, but I don't know what that means :-(");
             }
         }
-        printStr("Bye. Hope to see you again soon!");
+        write();
         scanner.close();
+        printStr("Bye. Hope to see you again soon!");
     }
 }
