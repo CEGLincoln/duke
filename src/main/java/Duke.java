@@ -1,57 +1,38 @@
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Duke {
 
-    private static String str = "This is the\n"
-        + " ____        _        \n"
-        + "|  _ \\ _   _| | _____ \n"
-        + "| | | | | | | |/ / _ \\\n"
-        + "| |_| | |_| |   <  __/\n"
-        + "|____/ \\__,_|_|\\_\\___|\n\n"
-        + "Hello! What can I do for you?";
-    private static Scanner scanner = new Scanner(System.in);
-    private static Boolean stay = true;
-    private static ArrayList<Task> stuff = new ArrayList<Task>();
-    private static Integer x = 0;
+    private String str;
+    private Scanner scanner;
+    private Boolean isExit;
+    private ArrayList<Task> stuff;
+    private Integer x;
+    private Storage storage;
 
-    public static void printStr(String str) {
+    public Duke(String filePath){
+        str = "This is the\n"
+            + " ____        _        \n"
+            + "|  _ \\ _   _| | _____ \n"
+            + "| | | | | | | |/ / _ \\\n"
+            + "| |_| | |_| |   <  __/\n"
+            + "|____/ \\__,_|_|\\_\\___|\n\n"
+            + "Hello! What can I do for you?";
+        scanner = new Scanner(System.in);
+        isExit = false;
+        stuff = new ArrayList<Task>();
+        x = 0;
+        storage = new Storage();
+    }
+
+    public void printStr(String str) {
         System.out.println(str);
     }
 
-    public static void write(){
-        try{
-            FileOutputStream fos = new FileOutputStream("duke.txt");
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(stuff);
-            oos.close();
-        }
-        catch(Exception e){
-            printStr("Oops! Write to file error.");
-        }
-    }
-
-    public static void read(){
-        try{
-            FileInputStream fis = new FileInputStream("duke.txt");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            stuff = (ArrayList<Task>) ois.readObject(); // WARNING: unchecked cast
-            ois.close();
-        }
-        catch(Exception e){
-            //Technically don't even need this
-            write();
-        }
-    }
-
-    public static void main(String[] args) {
-        read();
+    public void run() {
+        stuff = storage.read();
         printStr(str);
-        while(stay){
+        while(!isExit){
             printStr("______________________________");
             str = scanner.nextLine();
             printStr("______________________________");
@@ -77,7 +58,7 @@ public class Duke {
                     }
                     break;
                 case "bye":
-                    stay = false;
+                    isExit = true;
                     break;
                 case "list":
                     printStr("Here are the tasks in your list:");
@@ -148,8 +129,12 @@ public class Duke {
                     printStr("OOPS!!! I'm sorry, but I don't know what that means :-(");
             }
         }
-        write();
+        storage.write(stuff); //WARNING: not static enough
         scanner.close();
         printStr("Bye. Hope to see you again soon!");
+    }
+
+    public static void main(String[] args){
+        new Duke("TEXT").run();
     }
 }
