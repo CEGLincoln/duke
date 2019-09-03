@@ -136,6 +136,15 @@ public class Duke {
                     catch(Exception e){
                         printStr(e.getMessage());
                     }
+                case "find":
+                    printStr("Here are the matching tasks in your list:");
+                    x = 0;
+                    for(Task t : stuff){
+                        if(t.toString().contains(part[1])){
+                            x++;
+                            printStr(x + "." + t.toString());
+                        }
+                    }
                     break;
                 default:
                     printStr("OOPS!!! I'm sorry, but I don't know what that means :-(");
