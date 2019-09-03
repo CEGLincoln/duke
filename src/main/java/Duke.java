@@ -125,6 +125,18 @@ public class Duke {
                         printStr("OOPS!!! The description of an event cannot be empty.");
                     }
                     break;
+                case "delete":
+                    try{
+                        x = Integer.parseInt(part[1]) - 1;
+                        printStr("Noted. I've removed this task:");
+                        printStr(stuff.get(x).toString());
+                        stuff.remove((int)x);
+                        printStr("Now you have " + stuff.size() + " tasks in the list.");
+                    }
+                    catch(Exception e){
+                        printStr(e.getMessage());
+                    }
+                    break;
                 default:
                     printStr("OOPS!!! I'm sorry, but I don't know what that means :-(");
             }
