@@ -5,12 +5,11 @@ public class Deadline extends Task{
 
     //WARNING: serialVersionUID
     protected LocalDateTime ldt;
-    protected DateTimeFormatter formatter;
 
     //constructor
     public Deadline(String description, String t) throws DukeException{
         super(description);
-        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         try{
             ldt = LocalDateTime.parse(t,formatter);
         }
@@ -22,6 +21,7 @@ public class Deadline extends Task{
 
     @Override
     public String toString(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String fdt = ldt.format(formatter);
         return "[D]" + super.toString() + " (by: " + fdt + ")";
     }
