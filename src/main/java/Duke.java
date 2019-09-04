@@ -1,161 +1,49 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+public class Duke{
 
-public class Duke {
-
-    private String str;
-    private Scanner scanner;
-    private Boolean isExit;
-    private ArrayList<Task> stuff;
-    private Integer x;
     private Storage storage;
+    private TaskList tasks;
+    private Ui ui;
 
+    //constructor
     public Duke(String filePath){
-        str = "This is the\n"
-            + " ____        _        \n"
-            + "|  _ \\ _   _| | _____ \n"
-            + "| | | | | | | |/ / _ \\\n"
-            + "| |_| | |_| |   <  __/\n"
-            + "|____/ \\__,_|_|\\_\\___|\n\n"
-            + "Hello! What can I do for you?";
-        scanner = new Scanner(System.in);
-        isExit = false;
-        stuff = new ArrayList<Task>();
-        x = 0;
-        storage = new Storage();
+        ui = new Ui();
+        storage = new Storage(filePath);
+        try{
+            tasks = new TaskList(storage.load());
+        }
+        catch (DukeException e){
+            ui.showLoadingError();
+            tasks = new TaskList();
+        }
     }
 
-    public void printStr(String str) {
-        System.out.println(str);
-    }
-
-    public void run() {
-        stuff = storage.read();
-        printStr(str);
-        while(!isExit){
-            printStr("______________________________");
-            str = scanner.nextLine();
-            printStr("______________________________");
-            String[] part = str.split(" ", 2);
-            switch(part[0]){
-                case "help":
-                    printStr("Here is the command list:");
-                    printStr("help \t\t\t\t shows the command list");
-                    printStr("echo <msg> \t\t\t echos the message");
-                    printStr("bye \t\t\t\t terminates the program");
-                    printStr("list \t\t\t\t shows the list");
-                    printStr("done <id> \t\t\t mark as done");
-                    printStr("todo <task> \t\t\t add a todo");
-                    printStr("deadline <task> /by <time> \t add a deadline");
-                    printStr("event <task> /at <time> \t add an event");
-                    break;
-                case "echo":
-                    try{
-                        printStr(part[1]);
-                    }
-                    catch(Exception e){
-                        printStr("OOPS!!! The description of an echo cannot be empty.");
-                    }
-                    break;
-                case "bye":
-                    isExit = true;
-                    break;
-                case "list":
-                    printStr("Here are the tasks in your list:");
-                    x = 0;
-                    for(Task t : stuff){
-                        x++;
-                        printStr(x + "." + t.toString());
-                    }
-                    break;
-                case "done":
-                    try{
-                        x = Integer.parseInt(part[1]) - 1;
-                        stuff.get(x).markAsDone();
-                        printStr("Nice! I've marked this task as done:");
-                        printStr(stuff.get(x).toString());
-                    }
-                    catch(Exception e){
-                        printStr("OOPS!!! The id of a done must be between 1 and " + (stuff.size()-1) + ".");
-                    }
-                    break;
-                case "todo":
-                    try{
-                        Todo t = new Todo(part[1]);
-                        stuff.add(t);
-                        printStr("Got it. I've added this task:");
-                        printStr(t.toString());
-                        printStr("Now you have " + stuff.size() + " tasks in the list.");
-                    }
-                    catch(Exception e){
-                        printStr("OOPS!!! The description of a todo cannot be empty.");
-                    }
-                    break;
-                case "deadline":
-                    try{
-                        String[] art = part[1].split("/", 2);
-                        String[] rt = art[1].split(" ", 2);
-                        Deadline d = new Deadline(art[0], rt[1]);
-                        stuff.add(d);
-                        printStr("Got it. I've added this task:");
-                        printStr(d.toString());
-                        printStr("Now you have " + stuff.size() + " tasks in the list.");
-                    }
-                    catch(DukeException d){
-                        printStr("PLZ");
-                    }
-                    catch(Exception e){
-                        printStr("OOPS!!! The description of a deadline cannot be empty.");
-                    }
-                    break;
-                case "event":
-                    try{
-                        String[] art = part[1].split("/", 2);
-                        String[] rt = art[1].split(" ", 2);
-                        Event e = new Event(art[0], rt[1]);
-                        stuff.add(e);
-                        printStr("Got it. I've added this task:");
-                        printStr(e.toString());
-                        printStr("Now you have " + stuff.size() + " tasks in the list.");
-                    }
-                    catch(DukeException d){
-                        printStr("PLZ");
-                    }
-                    catch(Exception e){
-                        printStr("OOPS!!! The description of an event cannot be empty.");
-                    }
-                    break;
-                case "delete":
-                    try{
-                        x = Integer.parseInt(part[1]) - 1;
-                        printStr("Noted. I've removed this task:");
-                        printStr(stuff.get(x).toString());
-                        stuff.remove((int)x);
-                        printStr("Now you have " + stuff.size() + " tasks in the list.");
-                    }
-                    catch(Exception e){
-                        printStr(e.getMessage());
-                    }
-                case "find":
-                    printStr("Here are the matching tasks in your list:");
-                    x = 0;
-                    for(Task t : stuff){
-                        if(t.toString().contains(part[1])){
-                            x++;
-                            printStr(x + "." + t.toString());
-                        }
-                    }
-                    break;
-                default:
-                    printStr("OOPS!!! I'm sorry, but I don't know what that means :-(");
+    public void run(){
+        ui.showWelcome();
+        boolean isExit = false;
+        while (!isExit){
+            try{
+                String fullCommand = ui.readCommand();
+                ui.showLine();
+                Command c = Parser.parse(fullCommand);
+                c.execute(tasks, ui, storage);
+                isExit = c.isExit();
+            }
+            catch (DukeException e){
+                ui.showError(e.getMessage());
+            }
+            finally{
+                ui.showLine();
             }
         }
-        storage.write(stuff); //WARNING: not static enough
-        scanner.close();
-        printStr("Bye. Hope to see you again soon!");
+        try{
+            storage.save(tasks.array());
+        }
+        catch(DukeException e){
+            ui.showError("CANNOT SAVE! " + e.getMessage());
+        }
     }
 
     public static void main(String[] args){
-        new Duke("TEXT").run();
+        new Duke("tasks.txt").run();
     }
 }

@@ -6,35 +6,36 @@ import java.util.ArrayList;
 
 public class Storage{
 
-    private ArrayList<Task> stuff;
+    private String filePath;
     
-    public Storage(){
-        stuff = new ArrayList<Task>();
+    //constructor
+    public Storage(String fp){
+        filePath = fp;
     }
 
-    public static void write(ArrayList<Task> alt){
+    public void save(ArrayList<Task> tasks) throws DukeException{
         try{
-            FileOutputStream fos = new FileOutputStream("duke.txt");
+            FileOutputStream fos = new FileOutputStream(filePath);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(alt);
+            oos.writeObject(tasks);
             oos.close();
         }
         catch(Exception e){
-            System.out.println("Oops! Write to file error.");
+            throw new DukeException(e.getMessage());
         }
     }
 
-    public ArrayList<Task> read(){
+    public ArrayList<Task> load() throws DukeException{
+        ArrayList<Task> tasks = new ArrayList<Task>();
         try{
-            FileInputStream fis = new FileInputStream("duke.txt");
+            FileInputStream fis = new FileInputStream(filePath);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            stuff = (ArrayList<Task>) ois.readObject(); // WARNING: unchecked cast
+            tasks = (ArrayList<Task>) ois.readObject(); // WARNING: unchecked cast
             ois.close();
         }
         catch(Exception e){
-            //Technically don't even need this
-            write(stuff);
+            throw new DukeException(e.getMessage());
         }
-        return stuff;
+        return tasks;
     }
 }

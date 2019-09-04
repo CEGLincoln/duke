@@ -1,13 +1,14 @@
-public class Todo extends Task {
+public class Todo extends Task{
 
-    private static final long serialVersionUID = 1L;
+    //WARNING: serialVersionUID
 
-    public Todo(String description) {
+    //constructor
+    public Todo(String description){
         super(description);
     }
 
     @Override
-    public String toString() {
+    public String toString(){
         return "[T]" + super.toString();
     }
 }

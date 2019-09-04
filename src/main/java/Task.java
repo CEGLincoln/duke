@@ -1,25 +1,26 @@
 import java.io.Serializable;
 
-public class Task implements Serializable {
+public class Task implements Serializable{
 
-    private static final long serialVersionUID = 1L;
+    //WARNING: serialVersionUID
     protected String description;
     protected boolean isDone;
 
-    public Task(String description) {
+    //constructor
+    public Task(String description){
         this.description = description;
         this.isDone = false;
     }
 
-    public String getDescription() {
+    public String getDescription(){
         return this.description;
     }
 
-    public String getStatusIcon() {
+    public String getStatusIcon(){
         return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
     }
 
-    public void markAsDone() {
+    public void markAsDone(){
         this.isDone = true;
     }
 
