@@ -5,6 +5,12 @@ public class Parser{
         //NANI
     }
 
+    /**
+     * A huge switch case based on fullCommand
+     *
+     * @param[in] fullCommand The command from user in all of its glory.
+     * @return Returns a command class based on the input.
+     */
     public static Command parse(String fullCommand) throws DukeException{
         String[] part = fullCommand.split(" ", 2);
         switch(part[0]){
